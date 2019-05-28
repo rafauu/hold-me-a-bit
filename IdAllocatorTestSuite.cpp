@@ -1,10 +1,15 @@
 #include <gtest/gtest.h>
 #include "IdAllocator.hpp"
 
+namespace
+{
+constexpr auto DEFAULT_ALLOCATOR_SIZE = 8u;
+}
+
 class IdAllocatorTestSuite : public ::testing::Test
 {
 protected:
-    IdAllocator idAllocator{};
+    IdAllocator<unsigned> idAllocator{DEFAULT_ALLOCATOR_SIZE};
 };
 
 TEST_F(IdAllocatorTestSuite, exampleTest)
