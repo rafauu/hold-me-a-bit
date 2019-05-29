@@ -57,8 +57,7 @@ TEST_F(IdAllocatorTestSuite, shallDeallocateProperlyAfterResizing)
     ASSERT_EQ(3u, idAllocator.allocate());
     idAllocator.deallocate();
     idAllocator.deallocate();
-    idAllocator.deallocate();
-    idAllocator.deallocate();
+    ASSERT_EQ(2u, idAllocator.allocate());
 }
 
 int main(int argc, char **argv)
