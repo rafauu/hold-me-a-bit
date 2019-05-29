@@ -1,16 +1,17 @@
 #pragma once
+#include "IIdAllocator.hpp"
 #include <boost/dynamic_bitset.hpp>
 
 template <typename Size>
-class IdAllocator
+class DynamicIdAllocator : public IIdAllocator
 {
 public:
-    IdAllocator(Size size) :
+    DynamicIdAllocator(Size size) :
         idHolder(size)
     {}
-    auto allocate();
-    void deallocate();
-    void reset();
+    unsigned allocate() override;
+    void deallocate() override;
+    void reset() override;
 private:
     void resizeIfNeeded();
     boost::dynamic_bitset<> idHolder;
@@ -18,7 +19,7 @@ private:
 
 
 template <typename Size>
-auto IdAllocator<Size>::allocate()
+unsigned DynamicIdAllocator<Size>::allocate()
 {
     resizeIfNeeded();
     auto allocatedId{idHolder.count()};
@@ -28,7 +29,7 @@ auto IdAllocator<Size>::allocate()
 }
 
 template <typename Size>
-void IdAllocator<Size>::deallocate()
+void DynamicIdAllocator<Size>::deallocate()
 {
     if (idHolder.count() > 0)
     {
@@ -42,7 +43,7 @@ void IdAllocator<Size>::deallocate()
 }
 
 template <typename Size>
-void IdAllocator<Size>::resizeIfNeeded()
+void DynamicIdAllocator<Size>::resizeIfNeeded()
 {
     if (idHolder.all())
     {
@@ -53,7 +54,7 @@ void IdAllocator<Size>::resizeIfNeeded()
 }
 
 template <typename Size>
-void IdAllocator<Size>::reset()
+void DynamicIdAllocator<Size>::reset()
 {
     std::cout << "Container will be cleaned" << std::endl;
     idHolder.reset();

@@ -5,8 +5,8 @@ G++ = g++
 G++_FLAGS = -c -Wall -I $(GOOGLE_TEST_INCLUDE) -std=c++1z
 LD_FLAGS = -L /usr/local/lib -l $(GOOGLE_TEST_LIB) -l pthread -L/usr/local/boost/boost_1_39_0/stage/lib -lboost_filesystem
 
-OBJECTS = IdAllocatorTestSuite.o
-TARGET = IdAllocatorTestSuite
+OBJECTS = DynamicIdAllocatorTestSuite.o
+TARGET = DynamicIdAllocatorTestSuite
 
 all: $(TARGET)
 
