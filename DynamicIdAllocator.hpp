@@ -2,14 +2,12 @@
 #include "IIdAllocator.hpp"
 #include <boost/dynamic_bitset.hpp>
 
-template <typename Size>
-class DynamicIdAllocator : public IIdAllocator<Size>
+template <typename T = unsigned>
+class DynamicIdAllocator : public IIdAllocator<T>
 {
 public:
-    DynamicIdAllocator(Size size) :
-        idHolder(size)
-    {}
-    Size allocate() override;
+    DynamicIdAllocator(T size);
+    T allocate() override;
     void deallocate() override;
     void reset() override;
 private:
@@ -17,9 +15,13 @@ private:
     boost::dynamic_bitset<> idHolder;
 };
 
+template <typename T>
+DynamicIdAllocator<T>::DynamicIdAllocator(T size) :
+    idHolder(size)
+{}
 
-template <typename Size>
-Size DynamicIdAllocator<Size>::allocate()
+template <typename T>
+T DynamicIdAllocator<T>::allocate()
 {
     resizeIfNeeded();
     auto allocatedId{idHolder.count()};
@@ -28,8 +30,8 @@ Size DynamicIdAllocator<Size>::allocate()
     return allocatedId;
 }
 
-template <typename Size>
-void DynamicIdAllocator<Size>::deallocate()
+template <typename T>
+void DynamicIdAllocator<T>::deallocate()
 {
     if (idHolder.count() > 0)
     {
@@ -42,8 +44,8 @@ void DynamicIdAllocator<Size>::deallocate()
     }
 }
 
-template <typename Size>
-void DynamicIdAllocator<Size>::resizeIfNeeded()
+template <typename T>
+void DynamicIdAllocator<T>::resizeIfNeeded()
 {
     if (idHolder.all())
     {
@@ -53,8 +55,8 @@ void DynamicIdAllocator<Size>::resizeIfNeeded()
     }
 }
 
-template <typename Size>
-void DynamicIdAllocator<Size>::reset()
+template <typename T>
+void DynamicIdAllocator<T>::reset()
 {
     std::cout << "Container will be cleaned" << std::endl;
     idHolder.reset();

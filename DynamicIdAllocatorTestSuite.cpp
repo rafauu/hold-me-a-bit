@@ -3,13 +3,13 @@
 
 namespace
 {
-constexpr auto DEFAULT_ALLOCATOR_SIZE = 3u;
+constexpr auto DEFAULT_ALLOCATOR_SIZE{3u};
 }
 
 class DynamicIdAllocatorTestSuite : public ::testing::Test
 {
 protected:
-    DynamicIdAllocator<unsigned> sut{DEFAULT_ALLOCATOR_SIZE};
+    DynamicIdAllocator<> sut{DEFAULT_ALLOCATOR_SIZE};
 };
 
 TEST_F(DynamicIdAllocatorTestSuite, shallAllocateMemoryAndIdWhenRanOutOfBasicCapacity)
