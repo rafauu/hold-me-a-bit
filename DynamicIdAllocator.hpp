@@ -6,7 +6,7 @@ template <typename T = unsigned>
 class DynamicIdAllocator : public IIdAllocator<T>
 {
 public:
-    DynamicIdAllocator(T size);
+    explicit DynamicIdAllocator(T size);
     T allocate() override;
     void deallocate() override;
     void reset() override;
