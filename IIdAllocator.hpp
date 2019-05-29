@@ -1,8 +1,9 @@
 #pragma once
 
+template <typename Size>
 struct IIdAllocator
 {
-    virtual unsigned allocate() = 0;
+    virtual Size allocate() = 0;
     virtual void deallocate() = 0;
     virtual void reset() = 0;
 };

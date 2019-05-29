@@ -3,13 +3,13 @@
 #include <boost/dynamic_bitset.hpp>
 
 template <typename Size>
-class DynamicIdAllocator : public IIdAllocator
+class DynamicIdAllocator : public IIdAllocator<Size>
 {
 public:
     DynamicIdAllocator(Size size) :
         idHolder(size)
     {}
-    unsigned allocate() override;
+    Size allocate() override;
     void deallocate() override;
     void reset() override;
 private:
@@ -19,7 +19,7 @@ private:
 
 
 template <typename Size>
-unsigned DynamicIdAllocator<Size>::allocate()
+Size DynamicIdAllocator<Size>::allocate()
 {
     resizeIfNeeded();
     auto allocatedId{idHolder.count()};
