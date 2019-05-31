@@ -1,19 +1,18 @@
 #pragma once
-#include "IIdAllocator.hpp"
-#include "AllocationStrategy.hpp"
 #include <boost/dynamic_bitset.hpp>
-#include <memory>
-
+#include "IIdAllocator.hpp"
+#include "AllocationStrategyFactory.hpp"
 
 template <typename HolderType,
           typename IdType>
 class DynamicIdAllocator : public IIdAllocator<IdType>
 {
 private:
-    using AllocationBehaviour = std::unique_ptr<IAllocationStrategy<HolderType, IdType>>;
+    using AllocationBehaviour = std::unique_ptr<IAllocationStrategy<HolderType, IdType>>; //move to common
 public:
-    DynamicIdAllocator(IdType size) :
-        allocationBehaviour(std::make_unique<AllocationStrategy<HolderType, IdType>>()),
+    DynamicIdAllocator(AllocationAlgorithm algorithm,
+                       IdType size) :
+        allocationBehaviour(AllocationStrategyFactory<HolderType, IdType>::get(algorithm)),
         idHolder(size)
     {}
 

@@ -12,7 +12,8 @@ private:
     using HolderType = boost::dynamic_bitset<>;
     using IdType = unsigned;
 protected:
-    DynamicIdAllocator<HolderType, IdType> sut{DEFAULT_ALLOCATOR_SIZE};
+    DynamicIdAllocator<HolderType, IdType> sut{AllocationAlgorithm::Basic,
+                                               DEFAULT_ALLOCATOR_SIZE};
 };
 
 TEST_F(DynamicIdAllocatorTestSuite, shallAllocateMemoryAndIdWhenRanOutOfBasicCapacity)

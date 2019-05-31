@@ -3,8 +3,8 @@
 
 template <typename HolderType,
           typename IdType>
-struct AllocationStrategy : IAllocationStrategy<HolderType,
-                                                IdType>
+struct BasicAllocationStrategy : IAllocationStrategy<HolderType,
+                                                     IdType>
 {
     IdType allocate(HolderType& idHolder)
     {
