@@ -2,9 +2,9 @@
 
 template <typename HolderType,
           typename IdType>
-struct IIdAllocationStrategy
+struct IAllocationStrategy
 {
-    virtual ~IIdAllocationStrategy() = default;
+    virtual ~IAllocationStrategy() = default;
     virtual IdType allocate(HolderType&) = 0;
     virtual void deallocate(HolderType&) = 0;
 };

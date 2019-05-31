@@ -1,10 +1,10 @@
 #pragma once
-#include "IIdAllocationStrategy.hpp"
+#include "IAllocationStrategy.hpp"
 
 template <typename HolderType,
           typename IdType>
-struct IdAllocationStrategy : IIdAllocationStrategy<HolderType,
-                                                    IdType>
+struct AllocationStrategy : IAllocationStrategy<HolderType,
+                                                IdType>
 {
     IdType allocate(HolderType& idHolder)
     {
