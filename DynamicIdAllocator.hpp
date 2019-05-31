@@ -21,7 +21,15 @@ public:
 
     void deallocate() override
     {
-        allocationBehaviour->deallocate(idHolder);
+        if (idHolder.count() > 0)
+        {
+            idHolder >>= 1;
+            std::cout << "Id " << idHolder.count() << " has been deallocated" << std::endl;
+        }
+        else
+        {
+            std::cout << "Nothing to deallocate" << std::endl;
+        }
     }
 
     void reset() override
