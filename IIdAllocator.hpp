@@ -1,9 +1,10 @@
 #pragma once
 
-template <typename T>
+template <typename IdType>
 struct IIdAllocator
 {
-    virtual T allocate() = 0;
+    virtual ~IIdAllocator() = default;
+    virtual IdType allocate() = 0;
     virtual void deallocate() = 0;
     virtual void reset() = 0;
 };

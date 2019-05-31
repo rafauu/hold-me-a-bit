@@ -1,63 +1,49 @@
 #pragma once
 #include "IIdAllocator.hpp"
+#include "IdAllocationStrategy.hpp"
 #include <boost/dynamic_bitset.hpp>
+#include <memory>
 
-template <typename T = unsigned>
-class DynamicIdAllocator : public IIdAllocator<T>
+
+template <typename HolderType,
+          typename IdType>
+class DynamicIdAllocator : public IIdAllocator<IdType>
 {
-public:
-    explicit DynamicIdAllocator(T size);
-    T allocate() override;
-    void deallocate() override;
-    void reset() override;
 private:
-    void resizeIfNeeded();
-    boost::dynamic_bitset<> idHolder;
+    using AllocationBehaviour = std::unique_ptr<IIdAllocationStrategy<HolderType, IdType>>;
+public:
+    DynamicIdAllocator(IdType size) :
+        allocationBehaviour(std::make_unique<IdAllocationStrategy<HolderType, IdType>>()),
+        idHolder(size)
+    {}
+
+    IdType allocate() override
+    {
+        resizeIfNeeded();
+        return allocationBehaviour->allocate(idHolder);
+    }
+
+    void deallocate() override
+    {
+        allocationBehaviour->deallocate(idHolder);
+    }
+
+    void reset() override
+    {
+        std::cout << "Container will be cleaned" << std::endl;
+        idHolder.reset();
+    }
+private:
+    void resizeIfNeeded()
+    {
+        if (idHolder.all())
+        {
+            std::cout << "Container has been resized from: " << idHolder.size();
+            idHolder.resize(2 * idHolder.size());
+            std::cout << " to: " << idHolder.size() << std::endl;
+        }
+    }
+
+    AllocationBehaviour allocationBehaviour;
+    HolderType idHolder;
 };
-
-template <typename T>
-DynamicIdAllocator<T>::DynamicIdAllocator(T size) :
-    idHolder(size)
-{}
-
-template <typename T>
-T DynamicIdAllocator<T>::allocate()
-{
-    resizeIfNeeded();
-    auto allocatedId{idHolder.count()};
-    idHolder.set(allocatedId);
-    std::cout << "Id " << allocatedId << " has been allocated" << std::endl;
-    return allocatedId;
-}
-
-template <typename T>
-void DynamicIdAllocator<T>::deallocate()
-{
-    if (idHolder.count() > 0)
-    {
-        idHolder >>= 1;
-        std::cout << "Id " << idHolder.count() << " has been deallocated" << std::endl;
-    }
-    else
-    {
-        std::cout << "Nothing to deallocate" << std::endl;
-    }
-}
-
-template <typename T>
-void DynamicIdAllocator<T>::resizeIfNeeded()
-{
-    if (idHolder.all())
-    {
-        std::cout << "Container has been resized from: " << idHolder.size();
-        idHolder.resize(2 * idHolder.size());
-        std::cout << " to: " << idHolder.size() << std::endl;
-    }
-}
-
-template <typename T>
-void DynamicIdAllocator<T>::reset()
-{
-    std::cout << "Container will be cleaned" << std::endl;
-    idHolder.reset();
-}
