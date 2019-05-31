@@ -3,13 +3,13 @@
 #include "AllocationAlgorithm.hpp"
 #include "BasicAllocationStrategy.hpp"
 #include "ReversedAllocationStrategy.hpp"
+#include "CommonUsings.hpp"
 
 template <typename HolderType,
           typename IdType>
 struct AllocationStrategyFactory
 {
-    using AllocationBehaviour = std::unique_ptr<IAllocationStrategy<HolderType, IdType>>;
-    static AllocationBehaviour get(AllocationAlgorithm algorithm)
+    static AllocationBehaviour<HolderType, IdType> get(AllocationAlgorithm algorithm)
     {
         if (AllocationAlgorithm::Basic == algorithm)
         {

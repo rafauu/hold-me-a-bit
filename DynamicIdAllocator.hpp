@@ -6,8 +6,6 @@ template <typename HolderType,
           typename IdType>
 class DynamicIdAllocator : public IIdAllocator<IdType>
 {
-private:
-    using AllocationBehaviour = std::unique_ptr<IAllocationStrategy<HolderType, IdType>>; //move to common
 public:
     DynamicIdAllocator(AllocationAlgorithm algorithm,
                        IdType size) :
@@ -42,6 +40,6 @@ private:
         }
     }
 
-    AllocationBehaviour allocationBehaviour;
+    AllocationBehaviour<HolderType, IdType> allocationBehaviour;
     HolderType idHolder;
 };
