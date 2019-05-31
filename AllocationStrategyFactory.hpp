@@ -1,7 +1,8 @@
 #pragma once
 #include <memory>
-#include "BasicAllocationStrategy.hpp"
 #include "AllocationAlgorithm.hpp"
+#include "BasicAllocationStrategy.hpp"
+#include "ReversedAllocationStrategy.hpp"
 
 template <typename HolderType,
           typename IdType>
@@ -16,7 +17,7 @@ struct AllocationStrategyFactory
         }
         else if (AllocationAlgorithm::Reversed == algorithm)
         {
-            return std::make_unique<BasicAllocationStrategy<HolderType, IdType>>(); //add reversed
+            return std::make_unique<ReversedAllocationStrategy<HolderType, IdType>>();
         }
         else
         {

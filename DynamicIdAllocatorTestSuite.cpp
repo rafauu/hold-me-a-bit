@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <boost/dynamic_bitset.hpp>
 #include "DynamicIdAllocator.hpp"
 
 namespace
@@ -8,15 +9,20 @@ constexpr auto DEFAULT_ALLOCATOR_SIZE{3u};
 
 class DynamicIdAllocatorTestSuite : public ::testing::Test
 {
-private:
+protected:
     using HolderType = boost::dynamic_bitset<>;
     using IdType = unsigned;
+};
+
+
+class BasicDynamicIdAllocatorTestSuite : public DynamicIdAllocatorTestSuite
+{
 protected:
     DynamicIdAllocator<HolderType, IdType> sut{AllocationAlgorithm::Basic,
                                                DEFAULT_ALLOCATOR_SIZE};
 };
 
-TEST_F(DynamicIdAllocatorTestSuite, shallAllocateMemoryAndIdWhenRanOutOfBasicCapacity)
+TEST_F(BasicDynamicIdAllocatorTestSuite, shallAllocateMemoryAndIdWhenRanOutOfBasicCapacity)
 {
     ASSERT_EQ(0u, sut.allocate());
     ASSERT_EQ(1u, sut.allocate());
@@ -27,7 +33,7 @@ TEST_F(DynamicIdAllocatorTestSuite, shallAllocateMemoryAndIdWhenRanOutOfBasicCap
     ASSERT_EQ(6u, sut.allocate());
 }
 
-TEST_F(DynamicIdAllocatorTestSuite, shallReuseIdAfterDeallocation)
+TEST_F(BasicDynamicIdAllocatorTestSuite, shallReuseIdAfterDeallocation)
 {
     ASSERT_EQ(0u, sut.allocate());
     sut.deallocate();
@@ -35,7 +41,7 @@ TEST_F(DynamicIdAllocatorTestSuite, shallReuseIdAfterDeallocation)
     sut.deallocate();
 }
 
-TEST_F(DynamicIdAllocatorTestSuite, shoulNotCrashWhenDeallocatingMoreIdThanAllocated)
+TEST_F(BasicDynamicIdAllocatorTestSuite, shoulNotCrashWhenDeallocatingMoreIdThanAllocated)
 {
     ASSERT_EQ(0u, sut.allocate());
     ASSERT_EQ(1u, sut.allocate());
@@ -44,7 +50,7 @@ TEST_F(DynamicIdAllocatorTestSuite, shoulNotCrashWhenDeallocatingMoreIdThanAlloc
     sut.deallocate();
 }
 
-TEST_F(DynamicIdAllocatorTestSuite, shallAllocateFromBeginningAfterReset)
+TEST_F(BasicDynamicIdAllocatorTestSuite, shallAllocateFromBeginningAfterReset)
 {
     ASSERT_EQ(0u, sut.allocate());
     ASSERT_EQ(1u, sut.allocate());
@@ -53,7 +59,7 @@ TEST_F(DynamicIdAllocatorTestSuite, shallAllocateFromBeginningAfterReset)
     ASSERT_EQ(0u, sut.allocate());
 }
 
-TEST_F(DynamicIdAllocatorTestSuite, shallDeallocateProperlyAfterResizing)
+TEST_F(BasicDynamicIdAllocatorTestSuite, shallDeallocateProperlyAfterResizing)
 {
     ASSERT_EQ(0u, sut.allocate());
     ASSERT_EQ(1u, sut.allocate());
@@ -63,6 +69,27 @@ TEST_F(DynamicIdAllocatorTestSuite, shallDeallocateProperlyAfterResizing)
     sut.deallocate();
     ASSERT_EQ(2u, sut.allocate());
 }
+
+
+class ReversedDynamicIdAllocatorTestSuite : public DynamicIdAllocatorTestSuite
+{
+protected:
+    DynamicIdAllocator<HolderType, IdType> sut{AllocationAlgorithm::Reversed,
+                                               DEFAULT_ALLOCATOR_SIZE};
+};
+
+TEST_F(ReversedDynamicIdAllocatorTestSuite, shouldAssignIdsReversed)
+{
+    ASSERT_EQ(2u, sut.allocate());
+    ASSERT_EQ(1u, sut.allocate());
+    ASSERT_EQ(0u, sut.allocate());
+    sut.reset();
+    ASSERT_EQ(2u, sut.allocate());
+    ASSERT_EQ(1u, sut.allocate());
+    sut.deallocate();
+    ASSERT_EQ(1u, sut.allocate());
+}
+
 
 int main(int argc, char **argv)
 {

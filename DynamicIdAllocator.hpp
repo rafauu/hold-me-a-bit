@@ -1,5 +1,4 @@
 #pragma once
-#include <boost/dynamic_bitset.hpp>
 #include "IIdAllocator.hpp"
 #include "AllocationStrategyFactory.hpp"
 
